@@ -7,7 +7,8 @@ import styles from './styles.css';
 
 class App extends Component {
     state = {
-        heroes: []
+        heroes: [],
+        squadEditorList: []
     };
 
     componentDidMount() {
@@ -21,8 +22,19 @@ class App extends Component {
             });
     };
 
+    addHeroToSquad = heroId => {
+        this.setState(prevState => ({
+            squadEditorList: prevState.squadEditorList.concat(heroId),
+            heroes: prevState.heroes.filter(hero => hero.id !== heroId)
+        }), () => {
+            // eslint-disable-next-line
+            console.log(this.state);
+        });
+    };
+
     render() {
         const {heroes} = this.state;
+
         return (
             <div className={styles.App}>
                 <Header titleText='Super Squad' />
@@ -30,7 +42,10 @@ class App extends Component {
                     <div>Create Block</div>
                 </Panel>
                 <Panel title='Heroes' >
-                    <List heroes={heroes} />
+                    <List heroes={heroes} addHeroToSquad={this.addHeroToSquad} />
+                </Panel>
+                <Panel title='Squad Editor' >
+                    <List />
                 </Panel>
             </div>
         );
