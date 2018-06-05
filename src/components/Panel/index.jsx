@@ -9,9 +9,13 @@ const Panel = ({ title, children }) => (
   </div>
   );
 
+  Panel.defaultProps ={
+    title: ''
+  };
+
   Panel.propTypes = {
-    title: PropTypes.string.isRequired,
-    children: PropTypes.element.isRequired
+    title: PropTypes.string,
+    children: PropTypes.node.isRequired
   };
 
 export default Panel;

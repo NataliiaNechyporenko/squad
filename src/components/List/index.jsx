@@ -1,19 +1,20 @@
 import React from "react";
 import PropTypes from 'prop-types';
+import Card from '../Card'
 import HeroCard from '../HeroCard';
 import styles from './styles.css';
 
 const List = ({ heroes, ...rest }) => (
-  <ul className={styles.list}>
-    {heroes.length === 0 ?
+  <div className={styles.list}>
+      {heroes.length === 0 ?
       (<p className="empty__msg">There is no Heroes!</p>)
       : (heroes.map(hero => (
-          <li className="listItem" key={hero.id}>
+          <Card key={hero.id} >
               <HeroCard {...hero} {...rest} />
-          </li>)
+          </Card>)
       ))
     }
-  </ul>
+  </div>
 );
 
 List.defaultProps = {
