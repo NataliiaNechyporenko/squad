@@ -6,15 +6,3 @@
   margin: 0 auto;
   max-width: 1440px;
 }
-
-.searchInput {
-  border: none;
-  border-bottom: 1px solid #424242;
-  display: block;
-  line-height: 1.5;
-  width: 100%;
-}
-
-.searchInput:focus {
-  outline: none;
-}

@@ -1,6 +1,5 @@
 import React from "react";
 import PropTypes from 'prop-types';
-import Card from '../Card'
 import HeroCard from '../HeroCard';
 import styles from './styles.css';
 
@@ -9,9 +8,9 @@ const List = ({ heroes, ...rest }) => (
       {heroes.length === 0 ?
       (<p className="empty__msg">There is no Heroes!</p>)
       : (heroes.map(hero => (
-          <Card key={hero.id} >
+          <div key={hero.id} >
               <HeroCard {...hero} {...rest} />
-          </Card>)
+          </div>)
       ))
     }
   </div>

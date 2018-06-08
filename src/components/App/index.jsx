@@ -1,9 +1,13 @@
 import React, { Component } from 'react';
 import axios from 'axios';
-import Card from '../Card';
-import Header from '../Header';
+import PropTypes from 'prop-types';
+import { withStyles } from '@material-ui/core/styles';
+import Card from '@material-ui/core/Card';
+import CardContent from '@material-ui/core/CardContent';
+import PanelHeroes from '../PanelHeroes';
+import Title from '../Title';
+import CreateHeroPanel from '../CreateHeroPanel';
 import List from '../List';
-import Panel from '../Panel';
 import { getVisibleHeroes } from '../../utils/selectors';
 import styles from './styles.css';
 
@@ -65,35 +69,45 @@ class App extends Component {
 
     render() {
         const {heroes, searchValue} = this.state;
-        
-        const visibleHeroes = getVisibleHeroes(heroes, searchValue)
-
+        const { classes } = this.props;
+        const visibleHeroes = getVisibleHeroes(heroes, searchValue);
+   
         return (
             <div className={styles.App}>
-                <Header titleText='Super Squad' />
-                <Panel title='Create Hero' >
-                    <div>Create Block</div>
-                </Panel>
-                <Panel title='Heroes' >
-                    <Card>
-                        <input className={styles.searchInput} 
-                            placeholder="Search by name"
-                            onChange={this.searchByName}
-                            value={searchValue} />
-                    </Card>
-                    <List 
+                <Title titleText='Super Squad' />
+                <Card className={classes.card}>
+                    <CardContent>
+                        <Title titleText='Create Block' />
+                        <CreateHeroPanel />
+                    </CardContent>
+                </Card>
+                <PanelHeroes 
+                        searchValue={searchValue}
+                        searchByName={this.searchByName}
                         heroes={visibleHeroes}
                         addHeroToSquad={this.addHeroToSquad}
                         deleteHero={this.deleteHero}
                         showHeroInfo={this.showHeroInfo}
-                    />
-                </Panel>
-                <Panel title='Squad Editor' >
-                    <List />
-                </Panel>
+                />
+                <Card className={classes.card}>
+                    <CardContent>
+                        <Title titleText='Squad Editor' />
+                    </CardContent>
+                </Card>
+                <Card className={classes.card}>
+                    <CardContent>
+                        <Title titleText='Saved Squads' />
+                        <List />
+                    </CardContent>
+                </Card>
             </div>
         );
     }
 }
 
-export default App;
+App.propTypes = {
+    // eslint-disable-next-line
+    classes: PropTypes.object.isRequired,
+  };
+
+export default withStyles(styles)(App);
