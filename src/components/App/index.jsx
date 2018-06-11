@@ -5,10 +5,11 @@ import { withStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import PanelHeroes from '../PanelHeroes';
+import SquadEditorPanel from '../SquadEditorPanel';
 import Title from '../Title';
 import CreateHeroPanel from '../CreateHeroPanel';
 import List from '../List';
-import { getVisibleHeroes } from '../../utils/selectors';
+import { getVisibleHeroes, getHeroesInSquadEditor } from '../../utils/selectors';
 import styles from './styles.css';
 
 class App extends Component {
@@ -67,18 +68,30 @@ class App extends Component {
         console.log(heroInfo);
     };
 
+    addNewHero = newHero => {
+        this.setState(prevState => ({
+            heroes: prevState.heroes.concat(newHero)
+        }), () => {
+            // TODO: axios POST add
+            // eslint-disable-next-line
+            console.log(this.state);
+        });
+    };
+
     render() {
-        const {heroes, searchValue} = this.state;
+        const {heroes, searchValue, squadEditorList} = this.state;
         const { classes } = this.props;
         const visibleHeroes = getVisibleHeroes(heroes, searchValue);
-   
+        const SquadEditorList = getHeroesInSquadEditor(heroes, squadEditorList);
+        // eslint-disable-next-line
+        console.log(SquadEditorList);
         return (
             <div className={styles.App}>
                 <Title titleText='Super Squad' />
                 <Card className={classes.card}>
                     <CardContent>
                         <Title titleText='Create Block' />
-                        <CreateHeroPanel />
+                        <CreateHeroPanel addNewHero = { this.addNewHero } />
                     </CardContent>
                 </Card>
                 <PanelHeroes 
@@ -92,6 +105,7 @@ class App extends Component {
                 <Card className={classes.card}>
                     <CardContent>
                         <Title titleText='Squad Editor' />
+                        <SquadEditorPanel />
                     </CardContent>
                 </Card>
                 <Card className={classes.card}>
