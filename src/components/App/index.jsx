@@ -4,14 +4,27 @@ import CreateHeroForm from '../CreateHeroForm'
 import Header from '../Header';
 import HeroesList from '../HeroesList';
 import Panel from '../Shared/Panel';
-import { getVisibleHeroes } from '../../utils/selectors';
+import SavedSquadsList from '../SavedSquadsList';
+import SquadEditor from '../SquadEditor';
+import { getFilteredHeroes } from '../../utils/selectors';
 import styles from './styles.css';
+
+const INITIAL_STATE = {
+    heroes: [],
+    visibleHeroes: [],
+    squadEditorList: [],
+    searchValue: '',
+    squads: [],
+    currentSquadStat: {
+        str: 0,
+        int: 0,
+        spd: 0
+    }
+};
 
 class App extends Component {
     state = {
-        heroes: [],
-        squadEditorList: [],
-        searchValue: ''
+        ...INITIAL_STATE
     };
 
     componentDidMount() {
@@ -19,7 +32,16 @@ class App extends Component {
             .then(({data, status}) => {
                 if (status === 200) {
                     this.setState({
-                        heroes: data
+                        heroes: data,
+                        visibleHeroes: data
+                    })
+                }
+        });
+        axios.get('/squads')
+            .then(({data, status}) => {
+                if (status === 200) {
+                    this.setState({
+                        squads: data,
                     })
                 }
             });
@@ -33,9 +55,15 @@ class App extends Component {
     };
 
     addHeroToSquad = heroId => {
+        const addedHero = this.state.heroes.filter(hero => hero.id === heroId);
         this.setState(prevState => ({
-            squadEditorList: prevState.squadEditorList.concat(heroId),
-            heroes: prevState.heroes.filter(hero => hero.id !== heroId)
+            squadEditorList: prevState.squadEditorList.concat(addedHero),
+            visibleHeroes: prevState.visibleHeroes.filter(hero => hero.id !== heroId),
+            currentSquadStat: {
+                str: prevState.currentSquadStat.str + addedHero[0].strength,
+                int: prevState.currentSquadStat.int + addedHero[0].intelligence,
+                spd: prevState.currentSquadStat.spd + addedHero[0].speed
+            }
         }), () => {
             // eslint-disable-next-line
             console.log(this.state);
@@ -44,7 +72,8 @@ class App extends Component {
 
     deleteHero = heroId => {
         this.setState(prevState => ({
-            heroes: prevState.heroes.filter(hero => hero.id !== heroId)
+            heroes: prevState.heroes.filter(hero => hero.id !== heroId),
+            visibleHeroes: prevState.visibleHeroes.filter(hero => hero.id !== heroId)
         }), () => {
             // TODO: axios POST delete
             // eslint-disable-next-line
@@ -65,7 +94,8 @@ class App extends Component {
 
     addNewHero = newHero => {
         this.setState(prevState => ({
-            heroes: prevState.heroes.concat(newHero)
+            heroes: prevState.heroes.concat(newHero),
+            visibleHeroes: prevState.visibleHeroes.concat(newHero)
         }), () => {
             // TODO: axios POST add
             // eslint-disable-next-line
@@ -73,10 +103,62 @@ class App extends Component {
         });
     };
 
+    deleteSquad = squadId => {
+        this.setState(prevState => ({
+            squads: prevState.squads.filter(squad => squad.id !== squadId)
+        }), () => {
+            // TODO: axios POST delete
+            // eslint-disable-next-line
+            console.log(this.state);
+        });
+    };
+
+    saveSquad = () => {
+        if (this.state.squadEditorList.length !== 0) {
+        const newSquad = { 
+            heroes: this.state.squadEditorList,
+            stats: this.state.currentSquadStat,
+            id: Math.floor(Math.random() * 1000) };
+
+        this.setState(prevState => ({
+            squads: prevState.squads.concat(newSquad)
+        }), () => {
+            this.resetEditor();
+        })}
+    };
+
+    resetEditor = () => {
+        this.setState({
+            squadEditorList: [],
+            currentSquadStat: {
+                str: 0,
+                int: 0,
+                spd: 0
+            },
+            visibleHeroes: this.state.heroes
+        });
+    };
+
+    deleteHeroFromSquad = (heroId) => {
+        const returnedHero = this.state.heroes.filter(hero => hero.id === heroId);
+        this.setState(prevState => ({
+            squadEditorList: prevState.squadEditorList.filter(hero => hero.id !== heroId),
+            visibleHeroes: prevState.visibleHeroes.concat(returnedHero),
+            currentSquadStat: {
+                str: prevState.currentSquadStat.str - returnedHero[0].strength,
+                int: prevState.currentSquadStat.int - returnedHero[0].intelligence,
+                spd: prevState.currentSquadStat.spd - returnedHero[0].speed
+            }
+        }), () => {
+            // eslint-disable-next-line
+            console.log(this.state);
+        });
+    }
+
     render() {
-        const {heroes, searchValue} = this.state;
+        const { searchValue, visibleHeroes, squadEditorList, squads, currentSquadStat } = this.state;
         
-        const visibleHeroes = getVisibleHeroes(heroes, searchValue)
+        const filteredHeroes = getFilteredHeroes(visibleHeroes, searchValue)
 
         return (
             <div className={styles.App}>
@@ -94,15 +176,25 @@ class App extends Component {
                             value={searchValue} />
                     </Panel>
                     <HeroesList 
-                        heroes={visibleHeroes}
+                        heroes={filteredHeroes}
                         addHeroToSquad={this.addHeroToSquad}
                         deleteHero={this.deleteHero}
                         showHeroInfo={this.showHeroInfo}
                     />
                 </Panel>
                 <Panel title='Squad Editor' >
-                    <HeroesList />
+                    <SquadEditor 
+                        heroes={squadEditorList}
+                        resetEditor={this.resetEditor}
+                        saveSquad={this.saveSquad}
+                        currentSquadStat={currentSquadStat}
+                        showHeroInfo={this.showHeroInfo}
+                        deleteHeroFromSquad={this.deleteHeroFromSquad}
+                    />
                 </Panel>
+                <Panel title='Saved Squads' >
+                    <SavedSquadsList squads={squads} deleteSquad={this.deleteSquad} />
+                </Panel>                
             </div>
         );
     }

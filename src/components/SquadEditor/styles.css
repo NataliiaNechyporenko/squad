@@ -1,0 +1,12 @@
+.editor {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  width: 100%;
+}
+
+.buttonsSet {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}

@@ -5,5 +5,19 @@
   border-radius: 4px;
   color: #fff;
   display: flex;
-  padding: 8px 16px;
+  margin: 2px;
+  padding: 4px 8px;
+}
+
+.button:focus {
+  outline: none;
+}
+
+.button:hover {
+  background-color: #6d6d6d;
+  cursor: pointer;
+}
+
+.button:active {
+  background-color: #f57f17;
 }

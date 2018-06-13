@@ -4,3 +4,16 @@
   color: #424242;
   padding: 2px;
 }
+
+.iconButton:hover {
+  color: #6d6d6d;
+  cursor: pointer;
+}
+
+.iconButton:focus {
+  outline: none;
+}
+
+.iconButton:active {
+  color: #f57f17;
+}

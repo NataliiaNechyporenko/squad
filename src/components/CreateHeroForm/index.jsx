@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import EditIcon from '@material-ui/icons/Edit';
-// import Button from '../Shared/Button';
+import Button from '../Shared/Button';
 import styles from './styles.css';
 
 const INITIAL_STATE = {
@@ -21,7 +21,14 @@ class CreateHeroForm extends Component {
 
   handleSubmit = evt => {
     evt.preventDefault();
-    const newHero = { ...this.state, id: Math.floor(Math.random() * 1000) };
+    const newHero = { 
+      ...this.state,
+      id: Math.floor(Math.random() * 1000),
+      strength: parseInt(this.state.strength, 10) || 0,
+      intelligence: parseInt(this.state.intelligence, 10) || 0,
+      speed: parseInt(this.state.speed, 10) || 0,
+    };
+    // for ( const key in newHero) { if (key !== name) {[key] = parseInt(key)}};
     this.props.addNewHero(newHero);
     this.setState({ ...INITIAL_STATE });
       // eslint-disable-next-line
@@ -67,7 +74,7 @@ class CreateHeroForm extends Component {
         <option value='default' disabled>Speed</option>
         {[...Array(11).keys()].map(i => (<option value = {i} key={i} >{i}</option>))}
       </select>
-      <button type="submit" ><EditIcon /> Add Hero</button>
+      <Button type="submit" ><EditIcon /> Add Hero</ Button>
     </form>
   );
 }

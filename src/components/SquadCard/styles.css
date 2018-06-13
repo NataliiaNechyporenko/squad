@@ -1,0 +1,33 @@
+.squadCard {
+  display: flex;
+  justify-content: space-between;
+  position: relative;
+}
+
+.buttonWrapper {
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+
+.infoBlock {
+  flex: 1;
+}
+
+.title {
+  text-align: center;
+}
+
+.namesList,
+.statsList {
+  list-style-type: none;
+  padding: 0;
+}
+
+.namesList>li:before {
+  content: ' * ';
+}
+
+.statsList {
+  text-align: center;
+}

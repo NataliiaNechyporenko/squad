@@ -11,12 +11,12 @@ const Panel = ({ title, children }) => (
 
   Panel.defaultProps ={
     title: '',
-    children: []
+    children: {}
   };
 
   Panel.propTypes = {
     title: PropTypes.string,
-    children: PropTypes.arrayOf(PropTypes.element),
+    children: PropTypes.arrayOf(PropTypes.shape()),
   };
 
 export default Panel;

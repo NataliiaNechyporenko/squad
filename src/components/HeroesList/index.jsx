@@ -2,12 +2,13 @@ import React from "react";
 import PropTypes from 'prop-types';
 import Panel from '../Shared/Panel'
 import HeroCard from '../HeroCard';
+import Message from '../Shared/Message';
 import styles from './styles.css';
 
 const HeroesList = ({ heroes, ...rest }) => (
   <div className={styles.list}>
       {heroes.length === 0 ?
-      (<p className="empty__msg">There is no Heroes!</p>)
+      (<Message msg='There is no Heroes!' />)
       : (heroes.map(hero => (
           <Panel key={hero.id} >
               <HeroCard {...hero} {...rest} />
