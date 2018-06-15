@@ -71,14 +71,20 @@ class App extends Component {
     };
 
     deleteHero = heroId => {
-        this.setState(prevState => ({
-            heroes: prevState.heroes.filter(hero => hero.id !== heroId),
-            visibleHeroes: prevState.visibleHeroes.filter(hero => hero.id !== heroId)
-        }), () => {
-            // TODO: axios POST delete
+        axios.delete(`/heroes/${heroId}`).then( ({status}) => {
             // eslint-disable-next-line
-            console.log(this.state);
-        });
+            console.log(status)
+            if (status === 200) {
+                this.setState(prevState => ({
+                    heroes: prevState.heroes.filter(hero => hero.id !== heroId),
+                    visibleHeroes: prevState.visibleHeroes.filter(hero => hero.id !== heroId)
+                }))
+            } else {
+                // eslint-disable-next-line
+                alert(`Oops.. something went wrong!`);
+            }
+        }).then( () => {// eslint-disable-next-line
+            console.log(this.state);});
     };
 
     showHeroInfo = heroId => {
@@ -93,14 +99,17 @@ class App extends Component {
     };
 
     addNewHero = newHero => {
-        this.setState(prevState => ({
-            heroes: prevState.heroes.concat(newHero),
-            visibleHeroes: prevState.visibleHeroes.concat(newHero)
-        }), () => {
-            // TODO: axios POST add
-            // eslint-disable-next-line
-            console.log(this.state);
-        });
+        axios.post('/heroes', newHero).then(( { data, status } ) => {
+            if (status === 201) {
+                this.setState(prevState => ({
+                    heroes: [ ...prevState.heroes, data ],
+                    visibleHeroes: [ ...prevState.visibleHeroes, data ]
+                }))
+            } else {
+                // eslint-disable-next-line
+                alert(`Oops.. something went wrong!`);
+            }
+        })
     };
 
     deleteSquad = squadId => {

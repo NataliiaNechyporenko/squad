@@ -23,7 +23,7 @@ class CreateHeroForm extends Component {
     evt.preventDefault();
     const newHero = { 
       ...this.state,
-      id: Math.floor(Math.random() * 1000),
+      // id: Math.floor(Math.random() * 1000),
       strength: parseInt(this.state.strength, 10) || 0,
       intelligence: parseInt(this.state.intelligence, 10) || 0,
       speed: parseInt(this.state.speed, 10) || 0,
