@@ -64,16 +64,11 @@ class App extends Component {
                 int: prevState.currentSquadStat.int + addedHero[0].intelligence,
                 spd: prevState.currentSquadStat.spd + addedHero[0].speed
             }
-        }), () => {
-            // eslint-disable-next-line
-            console.log(this.state);
-        });
+        }));
     };
 
     deleteHero = heroId => {
         axios.delete(`/heroes/${heroId}`).then( ({status}) => {
-            // eslint-disable-next-line
-            console.log(status)
             if (status === 200) {
                 this.setState(prevState => ({
                     heroes: prevState.heroes.filter(hero => hero.id !== heroId),
@@ -83,8 +78,7 @@ class App extends Component {
                 // eslint-disable-next-line
                 alert(`Oops.. something went wrong!`);
             }
-        }).then( () => {// eslint-disable-next-line
-            console.log(this.state);});
+        });
     };
 
     showHeroInfo = heroId => {
@@ -113,27 +107,44 @@ class App extends Component {
     };
 
     deleteSquad = squadId => {
-        this.setState(prevState => ({
-            squads: prevState.squads.filter(squad => squad.id !== squadId)
-        }), () => {
-            // TODO: axios POST delete
+        axios.delete(`/squads/${squadId}`).then(( { status } ) => {
+            if (status === 200) {
+                this.setState(prevState => ({
+            squads: prevState.squads.filter(squad => squad.id !== squadId) 
+            } ) );
+        } else {
             // eslint-disable-next-line
-            console.log(this.state);
-        });
+            alert(`Oops.. something went wrong!`);
+        }
+        
+        })
     };
 
     saveSquad = () => {
         if (this.state.squadEditorList.length !== 0) {
-        const newSquad = { 
-            heroes: this.state.squadEditorList,
-            stats: this.state.currentSquadStat,
-            id: Math.floor(Math.random() * 1000) };
-
-        this.setState(prevState => ({
-            squads: prevState.squads.concat(newSquad)
-        }), () => {
-            this.resetEditor();
-        })}
+            const newSquad = { 
+                heroes: this.state.squadEditorList,
+                stats: this.state.currentSquadStat,
+            };
+        
+            axios.post('/squads', newSquad).then(( { data, status } ) => {
+                if (status === 201) {
+                    this.setState(prevState => ({
+                        squads: [ ...prevState.squads, data ],
+                    }), () => {
+                    this.resetEditor();
+                    // eslint-disable-next-line
+                    console.log(`New squad added to db`)
+                    })
+                } else {
+                    // eslint-disable-next-line
+                    alert(`Oops.. something went wrong!`);
+                };
+            });
+        } else {
+            // eslint-disable-next-line
+            alert(`No heroes in squad! There is nothing to save.`);
+        };
     };
 
     resetEditor = () => {
@@ -158,10 +169,7 @@ class App extends Component {
                 int: prevState.currentSquadStat.int - returnedHero[0].intelligence,
                 spd: prevState.currentSquadStat.spd - returnedHero[0].speed
             }
-        }), () => {
-            // eslint-disable-next-line
-            console.log(this.state);
-        });
+        }));
     }
 
     render() {

@@ -16,7 +16,7 @@ const Panel = ({ title, children }) => (
 
   Panel.propTypes = {
     title: PropTypes.string,
-    children: PropTypes.arrayOf(PropTypes.shape()),
+    children: PropTypes.node,
   };
 
 export default Panel;
