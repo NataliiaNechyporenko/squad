@@ -107,5 +107,6 @@
     "eslint-plugin-react": "^7.9.1",
     "prettier": "^1.13.4"
   },
-  "proxy": "http://localhost:3001/"
+  "proxy": "http://my-json-server.typicode.com/NataliiaNechyporenko/squad-json",
+  "homepage" : "http://NataliiaNechyporenko.github.io//squad"
 }
